@@ -99,6 +99,15 @@ const reducer = (state = {}, action) => {
             }
             return Object.assign({}, state, message)
         }
+        case action.type.includes('AGREEMENT_UPDATE_STUDY_MODULE_SUCCESS'): {
+            const message = {}
+            message[action.type] = {
+                active: true,
+                type: 'success',
+                text: 'Study module registration status saved'
+            }
+            return Object.assign({}, state, message)
+        }
         case action.type.includes('_ATTEMPT'): {
             const message = {}
             message[action.type] = {

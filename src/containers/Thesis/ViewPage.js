@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { arrayOf, func, object } from 'prop-types'
-import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
+import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import moment from 'moment'
 import {
     agreementType, attachmentType, councilmeetingType, personType, programmeType, studyfieldType, thesisType
@@ -11,7 +11,7 @@ import AttachmentList from '../Attachment/components/AttachmentList'
 import { updateThesis } from './services/thesisActions'
 import TextEdit from './components/edit/TextEdit'
 import ThesisFieldEdit from './components/edit/ThesisFieldEdit'
-import { getAgreements } from '../Agreement/services/agreementActions'
+import { getAgreements, saveStudyModuleRegistration } from '../Agreement/services/agreementActions'
 import ThesisValueField from './components/edit/ThesisValueField'
 import EditButton from './components/edit/EditButton'
 import ThesisCouncilmeetingPicker from './components/ThesisCouncilmeetingPicker'
@@ -30,7 +30,10 @@ class ThesisViewPage extends Component {
         studyfieldId: '',
         grade: '',
         programmeGraders: [],
-        graders: []
+        graders: [],
+        agreement: {
+            requestStudyModuleRegistration: false
+        }
     }
 
     componentDidMount() {
@@ -45,7 +48,8 @@ class ThesisViewPage extends Component {
         const thesisData = combineAllThesisData(Number(this.props.match.params.id), newProps)
         if (!thesisData.invalid) {
             this.setState(thesisData)
-            getGradersAction(thesisData.programmeData.programme.programmeId).then(res => this.setState({ programmeGraders: res.data }))
+            getGradersAction(thesisData.programmeData.programme.programmeId)
+                .then(res => this.setState({ programmeGraders: res.data }))
         }
     }
 
@@ -131,6 +135,20 @@ class ThesisViewPage extends Component {
         this.toggleEditField('grade')
     }
 
+    requestStudyModuleRegistration = () => {
+        const { agreement } = this.state
+        this.props.updateStudyModuleRegistration(agreement.agreementId, agreement.requestStudyModuleRegistration)
+    }
+
+    handleRequestStudyModuleRegistrationCheck = () => {
+        const { agreement } = this.state
+        const { requestStudyModuleRegistration } = agreement
+
+        this.setState({
+            agreement: Object.assign(agreement, { requestStudyModuleRegistration: !requestStudyModuleRegistration })
+        })
+    }
+
     render() {
         const {
             thesis, agreement, authors, programmeData,
@@ -139,10 +157,13 @@ class ThesisViewPage extends Component {
         const meetingProgramme = councilMeeting ?
             this.props.programmes.find(programme => programme.programmeId === councilMeeting.programmes[0]) :
             undefined
-        if (!thesis || !agreement)
+        if (!thesis || !agreement) {
             return null
+        }
 
         const { graders } = thesis
+        const { requestStudyModuleRegistration } = agreement
+
         return (
             <Grid columns={4}>
                 <GridRow>
@@ -300,6 +321,23 @@ class ThesisViewPage extends Component {
                         />
                     </ThesisFieldEdit>
                 </GridRow>
+                <GridRow>
+                    <GridColumn width={12}>
+                        <Form>
+                            <div className="ui sub header">
+                                Do you want to send a study module registration request to head of studies?
+                            </div>
+                            <Form.Checkbox
+                                label="Request study module registration"
+                                checked={requestStudyModuleRegistration}
+                                onClick={this.handleRequestStudyModuleRegistrationCheck}
+                            />
+                            <Form.Button onClick={this.requestStudyModuleRegistration}>
+                                Send registration request
+                            </Form.Button>
+                        </Form>
+                    </GridColumn>
+                </GridRow>
             </Grid>
         )
     }
@@ -322,7 +360,8 @@ const mapDispatchToProps = dispatch => ({
     saveThesis: thesis => dispatch(updateThesis(thesis)),
     getAgreements: () => dispatch(getAgreements()),
     createAttachment: attachment => dispatch(createAttachment(attachment)),
-    deleteAttachment: attachmentId => dispatch(deleteAttachment(attachmentId))
+    deleteAttachment: attachmentId => dispatch(deleteAttachment(attachmentId)),
+    updateStudyModuleRegistration: (agreementId, value) => dispatch(saveStudyModuleRegistration(agreementId, value))
 })
 
 ThesisViewPage.propTypes = {
@@ -340,7 +379,8 @@ ThesisViewPage.propTypes = {
     saveThesis: func.isRequired,
     getAgreements: func.isRequired,
     createAttachment: func.isRequired,
-    deleteAttachment: func.isRequired
+    deleteAttachment: func.isRequired,
+    updateStudyModuleRegistration: func.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ThesisViewPage)

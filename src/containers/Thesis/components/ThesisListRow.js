@@ -42,6 +42,7 @@ const ThesisListRow = ({ councilmeeting, thesis, showButtons, selectable, toggle
             <td>{renderStatusIcons(!authorName.some(author => author.includes('@')))}</td>
             <td>{renderStatusIcons(checkGraders(thesis.graders))}</td>
             <td>{renderStatusIcons(thesis.printDone)}</td>
+            <td>{renderStatusIcons(thesis.studiesComplete)}</td>
         </tr>
     )
 }
@@ -53,6 +54,10 @@ ThesisListRow.propTypes = {
     showButtons: bool.isRequired,
     selectable: bool.isRequired,
     selectedThesesIds: arrayOf(number).isRequired
+}
+
+ThesisListRow.defaultProps = {
+    councilmeeting: undefined
 }
 
 export default ThesisListRow
