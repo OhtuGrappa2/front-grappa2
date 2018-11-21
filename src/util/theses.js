@@ -51,22 +51,25 @@ export const formatThesis = (thesis, agreements, persons, roles, councilMeetings
 }
 
 export const combineAllThesisData = (thesisId, props) => {
-    const { theses, studyfields, programmes, councilMeetings, attachments, user } = props
+    const { theses, studyfields, programmes, councilMeetings, attachments, user, agreements } = props
 
     const editRoles = ['manager', 'admin']
     const hasAllDataLoaded = [
-        theses, studyfields, programmes, councilMeetings
+        theses, studyfields, programmes, councilMeetings, agreements
     ].every(arr => arr.length > 0)
 
-    if (!hasAllDataLoaded)
+    if (!hasAllDataLoaded) {
         return { invalid: true }
+    }
 
     const selectedId = Number(thesisId)
     const thesis = theses.find(t => t.thesisId === selectedId)
-    const agreement = thesis.agreements[0]
+    const agreement = agreements.find(agr => agr.agreementId === thesis.agreements[0].agreementId)
     const { authors } = thesis
-    if (!agreement || !authors)
+
+    if (!agreement || !authors) {
         return { invalid: true }
+    }
     const studyfield = studyfields.find(field => field.studyfieldId === agreement.studyfieldId)
     const programme = programmes.find(prg => prg.programmeId === studyfield.programmeId)
     const programmeData = { studyfield, programme }

@@ -12,3 +12,10 @@ export const saveAgreement = (agreement) => {
     const route = '/agreements'
     return callController(route, prefix, agreement, method)
 }
+
+export const saveStudyModuleRegistration = (agreementId, value) => {
+    const prefix = 'AGREEMENT_UPDATE_STUDY_MODULE_'
+    const method = 'put'
+    const route = `/agreements/${agreementId}`
+    return callController(route, prefix, { requestStudyModuleRegistration: value }, method)
+}

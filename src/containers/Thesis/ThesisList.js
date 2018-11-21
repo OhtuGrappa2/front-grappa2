@@ -149,6 +149,7 @@ export class ThesisList extends Component {
                             <th>Checked by author</th>
                             <th>No pending graders</th>
                             <th>Printed</th>
+                            <th>Study module register requested</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -156,8 +157,10 @@ export class ThesisList extends Component {
                             <ThesisListRow
                                 key={thesis.thesisId}
                                 thesis={thesis}
-                                councilmeeting={this.props.councilmeetings ? this.props.councilmeetings.find(councilmeeting => (
-                                    councilmeeting.councilmeetingId === thesis.councilmeetingId)) : undefined}
+                                councilmeeting={this.props.councilmeetings
+                                    ? this.props.councilmeetings.find(councilmeeting => (
+                                        councilmeeting.councilmeetingId === thesis.councilmeetingId))
+                                    : undefined}
                                 toggleThesis={this.toggleThesis}
                                 showButtons={this.props.showButtons}
                                 selectable={this.props.selectable}
