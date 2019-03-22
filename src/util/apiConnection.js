@@ -106,6 +106,7 @@ export const handleRequest = store => next => async (action) => {
                 const res = await callApi(route, method, data, prefix)
                 store.dispatch({ type: `${prefix}SUCCESS`, response: res.data, query })
             } catch (err) {
+                if (err.response.status === 403) return
                 store.dispatch({ type: `${prefix}FAILURE`, response: err, query })
             }
         }
