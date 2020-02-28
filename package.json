@@ -81,7 +81,7 @@
     "redux-ava": "^2.2.0",
     "redux-mock-store": "^1.5.1",
     "sinon": "^4.2.2",
-    "webpack-dev-server": "2.11.1"
+    "webpack-dev-server": "3.1.11"
   },
   "ava": {
     "files": [
