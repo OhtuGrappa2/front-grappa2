@@ -161,7 +161,6 @@ export class ThesisList extends Component {
                             <th>Checked by author</th>
                             <th>No pending graders</th>
                             <th>Printed for meeting <i className="question circle outline icon" style={{ cursor: 'pointer' }} onClick={() => this.setState({ showInfo: true })} /> </th>
-                            <th>In ethesis</th>
                         </tr>
                     </thead>
                     <tbody>
